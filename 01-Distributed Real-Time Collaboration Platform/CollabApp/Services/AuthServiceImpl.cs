@@ -1,6 +1,8 @@
-﻿namespace CollabApp.Server.Services
+﻿using CollabApp.Server.Protos;
+
+namespace CollabApp.Server.Services
 {
-    public class AuthService : AuthService.AuthServiceBase
+    public class AuthServiceImpl : AuthService.AuthServiceBase
     {
     }
 }
