@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option csharp_namespace = "CollabApp.Protos";
+
+package collab;
+
+import "google/protobuf/timestamp.proto";
+
+service CollaborationService {
+	rpc Edit (stream EditEvent) returns (stream EditEvent);
+}
+
+message EditEvent {
+	string documentId = 1;
+	string userId = 2;
+	EditType type = 3;
+	string content = 4;
+	google.protobuf.Timestamp timestamp = 5;
+}
+
+enum EditType {
+	INSERT = 0;
+	DELETE = 1;
+	REPLACE = 2;
+}
