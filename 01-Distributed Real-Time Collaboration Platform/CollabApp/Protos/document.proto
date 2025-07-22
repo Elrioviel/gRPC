@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option csharp_namespace = "CollabApp.Server.Protos";
+
+import "google/protobuf/timestamp.proto";
+
+service DocumentService {
+  rpc CreateDocument (CreateDocumentRequest) returns (CreateDocumentReply);
+  rpc GetDocument (GetDocumentRequest) returns (GetDocumentReply);
+  rpc ListDocuments (ListDocumentsRequest) returns (ListDocumentsReply);
+}
+
+message CreateDocumentRequest {
+  string title = 1;
+  string content = 2;
+  string ownerId = 3;
+}
+
+message CreateDocumentReply {
+  string documentId = 1;
+  google.protobuf.Timestamp createdAt = 2;
+}
+
+message GetDocumentRequest {
+  string documentId = 1;
+}
+
+message GetDocumentReply {
+  string documentId = 1;
+  string title = 2;
+  string content = 3;
+  string ownerId = 4;
+  google.protobuf.Timestamp updatedAt = 5;
+}
+
+message ListDocumentsRequest {
+  string userId = 1;
+}
+
+message ListDocumentsReply {
+  repeated GetDocumentReply documents = 1;
+}
