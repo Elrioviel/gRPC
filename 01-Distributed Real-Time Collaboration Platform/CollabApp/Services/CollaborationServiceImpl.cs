@@ -13,6 +13,10 @@ namespace CollabApp.Server.Services
             var clientId = Guid.NewGuid().ToString();
             string? documentId = null;
 
+            var user = context.GetHttpContext()?.User?.Identity?.Name;
+            if (string.IsNullOrEmpty(user))
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Missing JWT"));
+
             try
             {
                 await foreach (var edit in requestStream.ReadAllAsync())
