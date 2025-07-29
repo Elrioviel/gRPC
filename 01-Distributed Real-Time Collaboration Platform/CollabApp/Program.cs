@@ -8,7 +8,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddGrpc();
 
 builder.Services.AddAuthentication("Bearer")
@@ -37,7 +36,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGrpcService<CollaborationServiceImpl>();
-app.MapGrpcService<DocumentServiceImpl>();
+app.MapGrpcService<DocumentServiceImpl>(); 
+app.MapGrpcService<AuthServiceImpl>();
 app.MapGet("/", () => "This is a gRPC service. Use a gRPC client to connect.");
 
 app.Run();

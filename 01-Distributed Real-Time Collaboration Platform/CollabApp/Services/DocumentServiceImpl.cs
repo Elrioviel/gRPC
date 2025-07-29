@@ -1,15 +1,18 @@
-﻿using CollabApp.Server.Context;
+﻿using CollabApp.Protos;
+using CollabApp.Server.Context;
 using CollabApp.Server.Models;
 using CollabApp.Server.Protos;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Concurrent;
 
 namespace CollabApp.Server.Services
 {
     public class DocumentServiceImpl : DocumentService.DocumentServiceBase
     {
         private readonly AppDbContext _db;
+        private static readonly ConcurrentDictionary<string, List<IServerStreamWriter<EditMessage>>> _streams = new();
 
         public DocumentServiceImpl(AppDbContext db)
         {
@@ -81,6 +84,39 @@ namespace CollabApp.Server.Services
             }));
 
             return reply;
+        }
+
+        public override async Task JoinDocument(IAsyncStreamReader<EditMessage> requestStream, IServerStreamWriter<EditMessage> responseStream, ServerCallContext context)
+        {
+            var docId = "";
+            _streams.TryAdd(docId, new());
+
+            try
+            {
+                await foreach (var message in requestStream.ReadAllAsync())
+                {
+                    docId = message.DocumentId;
+
+                    if (!_streams.ContainsKey(docId))
+                        _streams.TryAdd(docId, new());
+
+                    foreach (var stream in _streams[docId].ToList())
+                    {
+                        if (stream != responseStream)
+                        {
+                            await stream.WriteAsync(message);
+                        }
+                    }
+
+                    if (!_streams[docId].Contains(responseStream))
+                        _streams[docId].Add(responseStream);
+                }
+            }
+            catch (Exception)
+            {
+                if (_streams.TryGetValue(docId, out var list))
+                    list.Remove(responseStream);
+            }
         }
     }
 }

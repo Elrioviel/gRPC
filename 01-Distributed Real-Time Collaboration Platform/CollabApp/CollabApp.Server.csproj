@@ -36,21 +36,6 @@
 	<ItemGroup>
 		<Protobuf Include="Protos\auth.proto" GrpcServices="Server" />
 		<Protobuf Include="Protos\collab.proto" GrpcServices="Server" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Protos\auth.proto" GrpcServices="Server" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Protos\auth.proto" GrpcServices="Server" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Protos\document.proto" GrpcServices="Server" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Protobuf Include="Protos\document.proto" GrpcServices="Server" />
 	</ItemGroup>
 
