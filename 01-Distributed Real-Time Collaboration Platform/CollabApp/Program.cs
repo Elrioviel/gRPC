@@ -1,6 +1,5 @@
 using CollabApp.Server.Context;
 using CollabApp.Server.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
