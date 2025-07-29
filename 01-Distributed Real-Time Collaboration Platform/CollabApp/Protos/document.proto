@@ -8,6 +8,7 @@ service DocumentService {
   rpc CreateDocument (CreateDocumentRequest) returns (CreateDocumentReply);
   rpc GetDocument (GetDocumentRequest) returns (GetDocumentReply);
   rpc ListDocuments (ListDocumentsRequest) returns (ListDocumentsReply);
+  rpc JoinDocument(stream EditMessage) returns (stream EditMessage);
 }
 
 message CreateDocumentRequest {
@@ -40,3 +41,16 @@ message ListDocumentsRequest {
 message ListDocumentsReply {
   repeated GetDocumentReply documents = 1;
 }
+
+message DocumentRequest {
+  string documentId = 1;
+  string userId = 2;
+}
+
+message EditMessage {
+  string documentId = 1;
+  string userId = 2;
+  string content = 3;
+  int32 version = 4;
+}
+
