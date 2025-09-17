@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option csharp_namespace = "ProductGrpc";
+
+package product;
+
+import "google/protobuf/empty.proto";
+
+message Product {
+	int64 id = 1;
+	string name = 2;
+	double unit_price = 3;
+}
+
+message Link {
+	int64 parent_id = 1;
+	int64 child_id = 2;
+	int32 quantity = 3;
+}
+
+message GetProductRequest {
+	int64 id = 1;
+}
+
+message PriceItem {
+	Product product = 1;
+	int32 quantity = 2;
+	double subtotal = 3;
+}
+
+message GetProductResponse {
+	Product product = 1;
+	double total_price = 2;
+	repeated PriceItem breakdown = 3;
+}
+
+message SubscribeRequest {
+	repeated int64 product_ids = 1;
+}
+
+message PriceUpdate {
+	int64 product_id = 1;
+	double new_unit_price = 2;
+	double new_total_price = 3;
+	string reason = 4;
+}
+
+message WatchRequest {
+	repeated int64 product_ids = 1;
+}
+
+service ProductService {
+	rpc CreateProduct(Product) returns (CreateProductResponse);
+	rpc CreateLink(Link) returns (google.protobuf.Empty);
+	rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+
+	// server streaming - push periodic price changes for all products
+	rpc StreamAllPriceUpdates(google.protobuf.Empty) returns (stream PriceUpdate);
+
+	// bidirectional - client sends WatchRequest(product ids) and server pushes updates for those ids
+	rpc WatchPriceChanges(stream WatchRequest) returns (stream PriceUpdate);
+}
