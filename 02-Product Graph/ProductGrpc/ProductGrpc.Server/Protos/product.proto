@@ -18,6 +18,10 @@ message Link {
 	int32 quantity = 3;
 }
 
+message CreateProductResponse {
+	Product product = 1;
+}
+
 message GetProductRequest {
 	int64 id = 1;
 }
